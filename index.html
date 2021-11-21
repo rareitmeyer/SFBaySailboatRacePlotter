@@ -1,0 +1,636 @@
+<!DOCTYPE HTML>
+<html>
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width,initial-scale=1" />
+    <link rel="shortcut icon" href="static/favicon.ico" />
+    <title>SF Bay Sailboat Race Plotter</title>
+  </head>
+  <body>
+    <div id="content">
+      <div id="expandedLegal">
+        <button id="collapseLegal">- Legal</button>
+        <p>This software is intended to help sailboat racing crews on San Francico Bay find the marks for their race. It is not suitable for navigation, and must not be used for that purpose.
+        </p>
+        <p>
+          <span class="legal">
+            THIS SOFTWARE IS PROVIDED BY THE AUTHOR ``AS IS'' AND ANY EXPRESS OR
+            IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE IMPLIED WARRANTIES
+            OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE ARE DISCLAIMED.
+            IN NO EVENT SHALL THE AUTHOR BE LIABLE FOR ANY DIRECT, INDIRECT,
+            INCIDENTAL, SPECIAL, EXEMPLARY, OR CONSEQUENTIAL DAMAGES (INCLUDING, BUT
+            NOT LIMITED TO, PROCUREMENT OF SUBSTITUTE GOODS OR SERVICES; LOSS OF USE,
+            DATA, OR PROFITS; OR BUSINESS INTERRUPTION) HOWEVER CAUSED AND ON ANY
+            THEORY OF LIABILITY, WHETHER IN CONTRACT, STRICT LIABILITY, OR TORT
+            (INCLUDING NEGLIGENCE OR OTHERWISE) ARISING IN ANY WAY OUT OF THE USE OF
+            THIS SOFTWARE, EVEN IF ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
+          </span>
+        </p>
+        <button id="legalIAgree">I agree</button>
+      </div>
+      <div id="collapsedLegal" class="hidden">
+        <button id="expandLegal">+ Legal</button>
+        <div id="collapsedDocumentation" class="hidden">
+          <button id="expandDocumentation">+ Documentation</button>
+        </div>
+        <div id="expandedDocumentation">
+          <button id="collapseDocumentation">- Documentation</button>
+          <div class="documentation">
+            <h1>General</h1>
+            <p>This is a simplified chartplotter on the browser, intended for sailboat race crew on San Francisco Bay who want to find the marks. It is not a full chartplotter. Is not intended for, or suitable for, navigation.</p>
+            <p>To use, adjust the settings to suit your tastes. Most changes to settings take effect at the next update. Then update the mark definitions if needed, and pick a mark. You will see the selected mark in the chart view, and a table of information about the relative distance and bearing below the chart. In addition to the usual information, bearings relative to the sun and the sun's shadow are available: this novel feature is useful because everyone on the rail can see the sun's direction, or a shadow's.</p>
+
+            <p>The display will be a boat icon with (once you get going) a few lines.</p>
+            <ul>
+              <li>The red line shows the bearing to the selected mark.</li>
+              <li>The yellow line shows the bearing to the sun.</li>
+              <li>The gray line shows the bearing to the sun's shadow.</li>
+            </ul>
+            <p>Use these lines to get a sense of where to look for the mark on the horizon.</p>
+
+            <p>If you are moving, the boat icon will be oriented in the direction the boat is tracking. Note that this is not necessarily the same direction as the boat is pointing in the real world, because the boat could have leeway or current.</p>
+
+            <p>Surrounding the boat icon are two compass circles, one true and one magentic. If you have a hand bearing compass, or a boat heading indicator, use these to help find the mark.</p>
+
+            <p>Last but not least, this app runs a simplified view of the land around the bay so you can look for the mark by looking for something behind it in the app, and then finding that landmark in the real world.</p>
+
+            <h1>Mark and Course Input</h1>
+
+            <h2>Basics</h2>
+            <p>Format is a Name followed by an equals sign and then a value, all on one line. Names shold start with a capital letter, followed by at least one more letter or number or underscore or (experimentally) period. Examples of good names are <span class="example">YRA_4</span>, <span class="example">RBBS_TI_1op</span>, and (experimentally) <span class="example">StF.A</span>. Examples of bad names include <span class="example">YRA-1</span>, <span class="example">1op</span>, <span class="example">A</span> and <span class="example">rbbs_a</span>.</p>
+            <p>Marks can be input in several formats</p>
+            <p>The simplest way is a WGS84 latitude and longitude separated by a comma.</p>
+            <ul>
+              <li>Explicit latitude, longitude as unsigned degrees using N, S, E, or W for hemispheres: <span class="example">Alcatraz = 37.808463 N, 122.455796 W</span></li>
+              <li>Explicit longitude, latitude as unsigned degrees using N, S, E, or W for hemispheres: <span class="example">Alcatraz = 122.455796 W, 37.808463 N</span></li>
+              <li>Implicit latitude, Longitude as signed degrees using - for west longitudes and south latitudes: <span class="example">Alcatraz = 37.808463, -122.455796</span></li>
+            </ul>
+            <p>Angles can be in explicit degrees, or degrees and minutes, or degrees, minutes and seconds by using ° ' "</p>
+            <ul>
+              <li><span class="example">Alcatraz = 37.808463° N, 122.455796° W</span></li>
+              <li><span class="example">Alcatraz = 37°48.7548'N, 122°26.9911'W</span></li>
+              <li><span class="example">Alcatraz = 37°48'29.71"N, 122°26'01.08"W</span></li>
+            </ul>
+            <p>Marks can also be specified as a relative location, in the form <span class="example">location &amp distance @ azimuth</span>. Locations for relative definitions can be given directly, or by the name of a prior-defined mark. Distances must have a unit: meters, nautical miles, kilometers, yards, or feet. Use m, nmi, km, yds, ft suffixes to indicate units. Note statute miles are not supported, to avoid confusion with nautical miles. Azimuths must be marked as true or magnetic: suffix the angle with T or M.</p>
+            <ul>
+              <li><span class="example">RBBS_FM = 37.808817 N, 122.439971 W & 0.18 nmi @ 23 M</span></li>
+              <li><span class="example">RBBS_FM = SFWestYachtHarborLight2 & 0.18 nmi @ 23 M</span></li>
+            </ul>
+            <p>Provide a description by putting an ! at the end with the description, before the end of the line.</p>
+            <ul>
+              <li><span class="example">YRA_2   = 122.422142 W, 37.826229 N                  ! Alcatraz Light</span></li>
+              <li><span class="example">RBBS_6  = SFWestYachtHarborLight2 & 0.15 nmi @ 54 M  ! Yellow Can Buoy at Fort Mason, YRA 6</span></li>
+
+            </ul>
+
+            <p>The <span class="emphasis">Save Location</span> button will save the current location as a mark with name L + timestamp, as <span class="example">L114523</span> for the (approximate) location at 11:45:23 AM local time.</p>
+
+            <p>Courses are added similarly, with a Name, an equals sign, and a sucession of roundings separated by -&gt; arrows.</p>
+
+            <p>Roundings are a location name, open bracket, rounding direction and close bracket.</p>
+
+            <p>Rounding directions are one of start, finish, starboard, port and gate. Starboard, port and gate may be abbrevated s, p and g. Note that case matters: S is South (for a latitude), s is starboard (for a rounding).</p>
+
+            <p>For example, a course that makes a clockwise loop from Ft. Mason to Blackaller, Harding, Blossom and back would be written as <span class="example">BayTour = YRA_6[start] -> YRA_16[s] -> YRA_17[s] -> YRA_18[s] -> YRA_6[finish]</span></p>
+
+            <h2>Advanced</h2>
+
+            <h3>More details</h3>
+
+            <p>Values can be any of the following.</p>
+            <ol>
+              <li>Numbers.</li>
+              <li>Angles, as a number with ° or a set of numbers with ° ' " suffixes.</li>
+              <li>Azimuths, angles with T or M sufficies for True or Magnetic bearings.</li>
+              <li>Distances, numbers with a nmi, km, yrd, or ft suffix to indicate nautical miles, kilometers, yards or feet.</li>
+              <li>Explicit locations, with pairs of signed numbers separated by a comma and interpreted as latitude, longitude. Alternately, suffix the numbers in the pair with N S E W to use unsigned latitude and longitude in either order.</li>
+              <li>Relative locations, a location followed by &amp; then a distance and a relative angle</li>
+            </ol>
+            <p>
+              Use ! after a definition to add a description.
+            </p>
+            <p>
+              Use # or // at the start of a line to make a comment to the end of the line.
+            </p>
+            <p>
+              Where it makes sense, there is support for arithmetic (+-*/) with the usual precedence. Powers are available with ^ and follow JavaScript convention (2^3^4 is 2^81, not 8^4).
+            <p>
+              To get an offset from A to B, subtract A from B.
+            </p>
+            <p>Note mix-type math is subject to change.  For
+              example, <span class="example">1.0 nmi + 200 ft</span>
+              works, but behavior of <span class="example">200 ft +
+              10</span> is undefined and subject to change.
+            </p>
+            <p>Several predefined functions are available.
+              <ol>
+                <li>Numbers: <span class="example">pi() = 3.14159...</span>, <span class="example">abs(-3.14159) = 3.14159</span>, <span class="example">sqrt(2) = 1.41421...</span>, <span class="example">log(10) = 2.30259...</span>, <span class="example">log10(10) = 1.0</span>, <span class="example">exp(1) = 2.71828...</span>.</li>
+                <li>Angle functions <span class="example">sin(30°) = 0.5</span>, <span class="example">cos(60) = 0.5</span>, <span class="example">tan(45°) = 1.0</span>.</li>
+                <li>To get an angle, use <span class="example">asin(1.0) = 90°</span>, <span class="example">acos(1.0) = 0°</span> or <span class="example">atan(1.0) = 45°</span> on numbers or <span class="example">atan2(10 ft; 10 ft) = 45°</span> with numbers or distances to return an angle. Note use of ; for functions of more than one argument, since , is used for locations.</li>
+                <li>Offset functions <span class="example">distance(200 ft @ 45 M) = 60.96 ! meters</span> and <span class="example">azimuth(200 ft @ 32 M) = 45 T</span> return the distance or azimuth.</li>
+                <li>Location functions <span class="example">latitude(37.808, -122.456) = 37.808</span> and <span class="example">longitude(37.808, -122.456) = -122.456</span> on a location to return the lat or lon. Use <span class="example">LocationB - LocationA</span> to get the offset that will take you from A to B.</li>
+                <li>Use <span class="example">length(Course1)</span> on a course, or <span class="example">length(YRA_16; 37.808, -122.456; YRA_16)</span> on semi-colon separated list of location to return the total distance.</li>
+              </ol>
+            </p>
+
+            <p>As a reminder on precision vs accuracy, a latitude expressed as degrees with four decimal places is precise to under 50 feet, and six decimal places is precise to under a foot. A typical GPS will be within 33 feet of the actual position half of the time, and more than 33 feet in error half of the time. A temporary buoy on a short 1:2 rode in 20 feet of water will move about 60 feet if the current reverses. Some clubs pre-set all their mark anchor gear to have 90' of rode to keep their lives simpler, which means almost 180 feet of movement as the current shifts. A government buoy in deeper water on longer rode will move much more than that. So when you look up that the Blossom Rock buoy was at 37.818376, -122.403448 when someone last measured it at some unknown point in the tide cycle, that doesn't mean you know where its position will be when you're going to round it to 6 decimal places / under a foot. This code uses 6 decimal places only so that if (heaven forbid) someone falls overboard and your only man overboard GPS is the "Save Location" button here, you have whatever precision is available even if it's not accurate.
+            </p>
+
+            <h3>Putting It Together For Temporary Marks</h3>
+
+            <p>Consider a situation where all the marks are temp marks: a windward mark, an offset to port (or starboard) and a gate. And maybe a jibe mark for a 45° 90° 45° trianglular loop like the classic olympic course. But you don't know where the marks will be in advance. The good news is you know the race committee will set up just to the west of Alatraz, and expect to be able to overhear the race committee tell the mark set boat the distance and direction. Then, in advance, make the following.</p>
+
+            <pre class="example">
+TI.RC = 37.82 N, 122.39 W
+
+WindwardDirection = 265 T
+WindwardDistance  = 1.5 nmi
+
+TI.W   = TI.RC & WindwardDistance @ WindwardDirection  ! Yellow inflatable tetrahedron
+TI.Wop = TI.W & 200 ft @ WindwardDirection - 100       ! Orange ball set as an offset to TI.W when rounding to port
+TI.Wos = TI.W & 200 ft @ WindwardDirection + 100       ! Orange ball set as an offset to TI.W when rounding to starboard
+TI.G   = TI.RC & 300 yds @ WindwardDirection           ! Gate, 2 yellow tetrahedrons set 300 yards upwind from RC
+
+# Jibe marks
+GW     = TI.W - TI.G                                        ! offset from G to W
+TI.Jp  = TI.W & distance(GW) / sqrt(2) @ azimuth(GW) - 135  ! Jibe mark for port-rounding courses
+TI.Js  = TI.W & distance(GW) / sqrt(2) @ azimuth(GW) + 135  ! Jibe mark for starboard-rounding courses
+
+# Courses
+Course1p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Once around windward/leeward to port
+Course1s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Once around windward/leeward to starboard
+Course2p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Twice around windward/leeward to port
+Course2s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Twice around windward/leeward to starboard
+Course3p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.Jp[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Olympic to port
+Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Olympic to starboard
+
+            </pre>
+
+            <p>Those should be fairly safe starting guesses. Offsets are often about 200 feet away from the mark, and about 10 degrees low of a beam reach.</p>
+
+            <p>Before the race starts, sail close to the race committee and use the <span class="emphasis">Save Location</span> button to save the RC location. Then listen on the radio and adjust the windward mark direction and distance to end up with something like</p>
+
+            <pre class="example">
+# L11453 provided by Save Location button when sailing near the TI Race Committee
+L114523 = 37.825211 N, 122.388142 W
+
+# Update to indicate the RC is at the saved location
+TI.RC = L114523
+
+# Update to reflect what the RC has said on the radio
+WindwardDirection = 260 T
+WindwardDistance  = 1.6 nmi
+
+# The rest is unchanged
+
+TI.W   = TI.RC & WindwardDistance @ WindwardDirection  ! Yellow inflatable tetrahedron
+TI.Wop = TI.W & 200 ft @ WindwardDirection - 100       ! Orange ball set as an offset to TI.W when rounding to port
+TI.Wos = TI.W & 200 ft @ WindwardDirection + 100       ! Orange ball set as an offset to TI.W when rounding to starboard
+TI.G   = TI.RC & 300 yds @ WindwardDirection           ! Gate, 2 yellow tetrahedrons set 300 yards upwind from RC
+
+# Jibe marks
+GW     = TI.W - TI.G                                        ! offset from G to W
+TI.Jp  = TI.W & distance(GW) / sqrt(2) @ azimuth(GW) - 135  ! Jibe mark for port-rounding courses
+TI.Js  = TI.W & distance(GW) / sqrt(2) @ azimuth(GW) + 135  ! Jibe mark for starboard-rounding courses
+
+# Courses
+Course1p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Once around windward/leeward to port
+Course1s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Once around windward/leeward to starboard
+Course2p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Twice around windward/leeward to port
+Course2s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Twice around windward/leeward to starboard
+Course3p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.Jp[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Olympic to port
+Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Olympic to starboard
+            </pre>
+
+            <h1>Known Issues</h1>
+            <ol>
+              <li>Mark input is experimental and not fully hooked up. Additionally, error handling on mark input is extremely limited. If something is not working, look for typos.</li>
+              <li>On Chrome on Android, downloading data a second time will not work unless Chrome &gt; Settings &gt; Site Settings &gt; Automatic Downloads is is set to "Blocked." Change it to "Ask first."</li>
+            </ol>
+          </div>
+        </div>
+        <div id="collapsedSettings">
+          <button id="expandSettings">+ Settings</button>
+        </div>
+        <div id="expandedSettings" class="hidden">
+          <button id="collapseSettings">- Settings</button>
+          <table>
+            <tr><td>Mode</td><td>
+                <select id="simulationOrGPS">
+                  <option value="simulation_20x">simulation (20x)</option>
+                  <option value="simulation_1x">simulation (1x)</option>
+                  <option value="gps" selected>gps</option>
+                  <option value="stop" selected>stop</option>
+                </select>
+            </td></tr>
+            <tr><td>Display</td><td>
+                <select id="up">
+                  <option value="northTrue" selected>true north up</option>
+                  <option value="northMagnetic">magnetic north up</option>
+                  <option value="track">track up</option>
+                  <option value="sun">sun up</option>
+                  <option value="sunShadow">sun shadow up</option>
+                </select>
+            </td></tr>
+            <tr><td>Angles</td><td>
+                <select id="angleFormat">
+                  <option value="degrees" selected>°</option>
+                  <option value="degreesMinutes" selected>° '</option>
+                  <option value="degreesMinutesSeconds">° ' "</option>
+                </select>
+                <select id="angleSign">
+                  <option value="signed">signed</option>
+                  <option value="longSuffix" selected>long suffix</option>
+                  <option value="shortSuffix" selected>short suffix</option>
+                </select>
+            </td></tr>
+            <tr><td>Distances</td><td>
+                <select id="distanceUnits">
+                  <!-- <option value="statuteMiles">Statute Miles</option> -->
+                  <option value="nauticalMiles" selected>Nautical Miles</option>
+                  <option value="kilometers">kilometers</option>
+                  <option value="meters">meters</option>
+                </select>
+            </td></tr>
+            <tr><td>Azimuths</td><td>
+                <select id="azimuthUnits">
+                  <option value="true" selected>True</option>
+                  <option value="magnetic">Magnetic</option>
+                  <option value="both">Both</option>
+                </select>
+            </td></tr>
+          </table>
+          <div id="collapsedDebugSettings">
+            <button id="expandDebugSettings">+ Debug Settings</button>
+          </div>
+          <div id="expandedDebugSettings" class="hidden">
+            <button id="collapseDebugSettings">- Debug Settings</button>
+            <p>The following options are only intended for debugging or testing</p>
+            <table>
+              <tr><td>approx street grid</td><td>
+                  <select id="debugStreetGrid">
+                    <option value="none" selected>none</option>
+                    <!-- try to keep these organized north to south, please -->
+                    <option value="richmond">richmond</option>
+                    <option value="berkeley">berkeley</option>
+                    <option value="corinthian">corinthian</option>
+                    <option value="st francis">st francis and golden gate</option>
+                    <option value="south beach">south beach</option>
+                    <option value="encinal">encinal</option>
+                    <option value="balboa park">balboa park</option>
+                    <option value="oyster point">oyster point</option>
+                    <option value="half moon bay">half moon bay</option>
+                    <option value="sequoia">sequoia</option>
+                  </select>
+              </td></tr>
+            </table>
+          </div>
+        </div>
+        <div id="collapsedMarkInput">
+          <button id="expandMarkInput">+ Mark Input</button>
+        </div>
+        <div id="expandedMarkInput" class="hidden">
+          <button id="collapseMarkInput">- Mark Input</button>
+          <div>
+            <textarea id="markInputTextArea" rows=20>
+# Simple math works
+Two = 2
+Eight = 1 + 2 * 3 + 1
+Sqrt2 = (1 + 1)^0.5
+Ten = Eight + Two
+
+# Angles
+A10 = 10°
+A10_30 = 10°30'
+A10_30_30 = 10°30'30"
+R10T = 10 T
+R10M = 10 M
+R390T = 390 T
+
+# Distances
+D10nm = 10 nmi
+D5ft = 5 ft
+D100m = 10*10 m
+
+# Basic locations assume degrees
+YRA_1  = 37.929270 N, 122.430930 W  ! Red Rock Island
+YRA_2  = 37.826229 N, 122.422142 W  ! [4315] W Fl W 5s Alcatraz Light
+YRA_3  = 37.699196 N, 123.001837 W  ! [355] W Fl W 15s Farallon Light
+YRA_4  = 37.852833 N, 122.443500 W  ! Temp YC Buoy near Pt Knox
+YRA_5  = 37.819580 N, 122.430470 W  ! Temp YC Buoy Approx. 0.6 nmi SW of Alcatraz
+YRA_6  = 37.811333 N, 122.431167 W  ! Yellow column 'M' 200 yd North of Ft Mason Docks
+YRA_7  = 37.833317 N, 122.396439 W  ! [5350] R '2' Fl R 6s San Francisco Bay North Channel Lighted Buoy 2
+YRA_8  = 37.847042 N, 122.396470 W  ! [5400] R '4' Fl R 2.5s San Francisco Bay North Channel Lighted Buoy 4
+YRA_9  = 37.844630 N, 122.350771 W  ! Temp YC Buoy 0.5 nmi ESE of West end Berkeley Pier ruins/1 nmi ENE of YRA_10
+YRA_10 = 37.844432 N, 122.371837 W  ! Temp YC Buoy approx 0.6 nmi WSW of West end Berkeley Pier ruins
+YRA_11 = 37.831865 N, 122.341627 W  ! Temp YC Buoy 1.5 nmi East of Treasure Island
+YRA_12 = 37.843825 N, 122.453357 W  ! [4340] G '1' Fl G 4s Raccoon Strait Lighted Buoy 1
+YRA_13 = 37.807500 N, 122.460667 W  ! Crissy Field Buoy
+YRA_14 = 37.881942 N, 122.400248 W  ! [5480] W Iso R 6s Southampton Shoal Light
+YRA_15 = 37.839333 N, 122.466500 W  ! Approx. 0.5 nmi East of Yellow Bluff (Sausalito vicinity)
+YRA_16 = 37.809500 N, 122.466667 W  ! Yellow sphere 'C' 0.2 nmi East of Ft Point - Blackaller
+
+# Without N S E W sufficies, (signed) numbers are latitude, longitude
+YRA_17 = 37.838239, -122.445994      ! [4330] RG Fl (2+1)R 6s Harding Rock Lighted Buoy HR
+YRA_18 = 37.818376, -122.403448      ! [4415] GR Fl (2+1)G 6s Blossom Rock Lighted Bell Buoy BR
+YRA_19 = 37.879698, -122.414932      ! [5485] R '8' Fl R 2.5s San Francisco Bay North Channel Lighted Buoy 8
+YRA_21 = 37.832016, -122.408648      ! [5348] G '1' Fl G 6s San Francisco Bay North Channel Lighted Buoy 1
+
+# Using explicit N S E W allows flipping the natural order to provide coordinates as longitude, latitude if you like X, Y
+PtCavallo               = 122.472750 W, 37.832150 N
+PtDiablo                = 122.499973 W, 37.820484 N
+AnitaRockLight          = 122.453548 W, 37.808326 N
+SFWestYachtHarborLight2 = 122.439971 W, 37.808817 N
+
+# Angles are assumed to be in decimal degreees, which you can make explicit with °.
+# If you prefer to use degrees, minutes and seconds, mark the parts with ° ' " suffices.
+Salesforce   = 122.3969°W,  37.7899°N
+Transamerica = 122.4028°W,  37.7952°N
+MtTam        = 122°34'40"W, 37°55'45"N
+SFO          = 122°22'30"W, 37°37'08"N
+
+# Relative positions
+RBBS_1  = AnitaRockLight & 0.40 nmi @ 312 M
+RBBS_19 = PtDiablo & 0.40 nmi @ 56 M
+RBBS_FM = SFWestYachtHarborLight2 & 0.18 nmi @ 23 M
+
+# Calculate an offset from two locations with A - B, which gives the distance and direction from B to get to A.
+North100km = (YRA_2 & 100 km @ 0 T) - YRA_2
+AnitaRockToRBBS1 = AnitaRockLight - RBBS_1
+
+# Note that on an ellipsoid, a square "box" is not square
+LoopStart = 37, 121
+LoopEnd = LoopStart & 100 km @ 0 T & 100 km @ 90 T & 100 km @ 180 T & 100 km @ 270 T
+LoopDelta = LoopEnd - LoopStart
+
+# It's less significant with a smaller box
+SmallLoopStart = 37, 121
+SmallLoopEnd = SmallLoopStart & 100 m @ 0 T & 100 m @ 90 T & 100 m @ 180 T & 100 m @ 270 T
+SmallLoopDelta = SmallLoopEnd - SmallLoopStart
+
+# some function calls
+Pi = pi()
+Sqrt10 = sqrt(10)
+Sin30 = sin(30°)
+Cost60 = cos(60)
+Tan = tan(45)
+Theta = atan2(3; 2)  ! Note use of ; to separate arguments since , is reserved for locations
+Log = log(10)
+Log10 = log10(10)
+Exp = exp(1)
+Latitude38 = latitude(37.826229° N, 122.422142° W)
+Lon = longitude(37.826229° N, 122.422142° W)
+Dist = distance(100 ft @ 37 M)
+Az = azimuth(100 ft @ 37 M)
+Length = length(YRA_6; YRA_16; YRA_17; YRA_18; YRA_6)
+
+# courses and course lengths
+BayTour = YRA_6[start] -> YRA_16[s] -> YRA_17[s] -> YRA_18[s] -> YRA_6[finish] ! Channel 69
+BayTour_len = length(BayTour)
+
+# ################################################################
+# Example
+
+# L11453 provided by Save Location button when sailing near the TI Race Committee
+L114523 = 37.825211 N, 122.388142 W
+
+# Update to indicate the RC is at the saved location
+TI.RC = L114523
+
+# Update to reflect what the RC has said on the radio
+WindwardDirection = 260 T
+WindwardDistance  = 1.6 nmi
+
+# The rest is unchanged
+
+TI.W   = TI.RC & WindwardDistance @ WindwardDirection  ! Yellow inflatable tetrahedron
+TI.Wop = TI.W & 200 ft @ WindwardDirection - 100       ! Orange ball set as an offset to TI.W when rounding to port
+TI.Wos = TI.W & 200 ft @ WindwardDirection + 100       ! Orange ball set as an offset to TI.W when rounding to starboard
+TI.G   = TI.RC & 300 yds @ WindwardDirection           ! Gate, 2 yellow tetrahedrons set 300 yards upwind from RC
+
+# Jibe marks
+GW     = TI.W - TI.G                                        ! offset from G to W
+TI.Jp  = TI.W & distance(GW) / sqrt(2) @ azimuth(GW) - 135  ! Jibe mark for port-rounding courses
+TI.Js  = TI.W & distance(GW) / sqrt(2) @ azimuth(GW) + 135  ! Jibe mark for starboard-rounding courses
+
+Course1p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Once around windward/leeward to port
+Course1s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Once around windward/leeward to starboard
+Course2p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Twice around windward/leeward to port
+Course2s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Twice around windward/leeward to starboard
+Course3p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.Jp[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Olympic to port
+Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Olympic to starboard
+            </textarea>
+          </div>
+          <button id="calculateMarkPositions">(TODO) Calculate Mark Positions</button>
+          <div>
+            <p id=parseErrors>Parse Errors</p>
+          </div>
+          <div class="overflowxscroll">
+            <p>Mark Positions</p>
+            <table id="MarkDefinitionsTable">
+              <thead>
+                <tr><th>Name</th>
+                  <th>Description</th>
+                  <th>Latitude</th>
+                  <th>Longitude</th>
+                  <th>Number</th>
+                  <th>Distance (meters)</th>
+                  <th>Angle (or Azimuth, True)</th>
+                  <th>Course</th>
+                  <th>Type</th>
+                </tr>
+              </thead>
+              <tbody>
+              </tbody>
+            </table>
+            <button id="clearMarkDefinitionsTable">Clear Table</button>
+          </div>
+        </div>
+        <div id="collapsedChart" class="hidden">
+          <button id="expandChart">+ Chart</button>
+        </div>
+        <div id="expandedChart">
+          <button id="collapseChart">- Chart</button>
+          <button id="zoomIn">+</button>
+          <button id="zoomOut">-</button>
+          <div id="chartDiv">
+            <svg id="chartSvg" class="chart" width=500 height=500>
+              <defs>
+                <clipPath id="chartLandClipPath">
+                  <rect id="chartLandClipPathRect" x=0 y=0 width=500 height=500 />
+                </clipPath>
+              </defs>
+              <g>
+                <rect id="chartBackgroundRect" x=0 y=0 width=500 height=500 stroke=blue stroke-width="1px" fill="#eee"/>
+              </g>
+              <!-- land is not rotated like the compass and boat are, but separately !-->
+              <g id="landSVGG">
+              </g>
+              <g id="streetGridSVGG">
+              </g>
+              <!-- note nested g elements to allow easy compass rotation -->
+              <g id="chartLocationSVGG" transform="translate(250, 250) rotate(0)">
+                <g id="compassSVGG" transform="translate(0,0) rotate(0)">
+                  <g>
+                    <circle class="compassCard" r="100" cx="0" cy="0" stroke="black" stroke-width="1px" fill="#fff7"/>
+                    <path class="compassMajorTicks" d="M0,100L0,75 M-100,0L-75,0 M0,-100L0,-75 M100,0L75,0 " stroke="black" stroke-width="1px"></path>
+                    <path class="compassMinorTicks" d="M-17,98L-16,89 M-34,94L-31,85 M-50,87L-45,78 M-64,77L-58,69 M-77,64L-69,58 M-87,50L-78,45 M-94,34L-85,31 M-98,17L-89,16 M-98,-17L-89,-16 M-94,-34L-85,-31 M-87,-50L-78,-45 M-77,-64L-69,-58 M-64,-77L-58,-69 M-50,-87L-45,-78 M-34,-94L-31,-85 M-17,-98L-16,-89 M17,-98L16,-89 M34,-94L31,-85 M50,-87L45,-78 M64,-77L58,-69 M77,-64L69,-58 M87,-50L78,-45 M94,-34L85,-31 M98,-17L89,-16 M98,17L89,16 M94,34L85,31 M87,50L78,45 M77,64L69,58 M64,77L58,69 M50,87L45,78 M34,94L31,85 M17,98L16,89 " stroke="black" stroke-width="1px"></path>
+                  </g>
+                  <g transform="translate(0,0) rotate(0)">
+                    <text text-anchor="middle" x=0 y=-105>true</text>
+                  </g>
+                  <g transform="translate(0,0) rotate(90)">
+                    <text text-anchor="middle" x=0 y=-105>90</text>
+                  </g>
+                  <g transform="translate(0,0) rotate(180)">
+                    <text text-anchor="middle" x=0 y=-105>180</text>
+                  </g>
+                  <g transform="translate(0,0) rotate(270)">
+                    <text text-anchor="middle" x=0 y=-105>270</text>
+                  </g>
+                  <g id="magneticCompassSVGG" transform="translate(0,0) rotate(-13.2)">
+                    <g>
+                      <path class="compassMagneticMajorTicks" d="M0,70L0,45 M-70,0L-45,0 M0,-70L0,-45 M70,0L45,0 " stroke="black" stroke-width="1px"/>
+                      <path class="compassMagneticMinorTicks" d="M-12,69L-10,59 M-24,66L-21,56 M-35,61L-30,52 M-45,54L-39,46 M-54,45L-46,39 M-61,35L-52,30 M-66,24L-56,21 M-69,12L-59,10 M-69,-12L-59,-10 M-66,-24L-56,-21 M-61,-35L-52,-30 M-54,-45L-46,-39 M-45,-54L-39,-46 M-35,-61L-30,-52 M-24,-66L-21,-56 M-12,-69L-10,-59 M12,-69L10,-59 M24,-66L21,-56 M35,-61L30,-52 M45,-54L39,-46 M54,-45L46,-39 M61,-35L52,-30 M66,-24L56,-21 M69,-12L59,-10 M69,12L59,10 M66,24L56,21 M61,35L52,30 M54,45L46,39 M45,54L39,46 M35,61L30,52 M24,66L21,56 M12,69L10,59 " stroke="black" stroke-width="1px"/>
+                      <defs>
+                        <path class="compassMagneticText" id="compassMagneticText1" d="M0,0 M-30,-30 a42.4,42.4,0,0,1,60,0 " stroke=red stroke-width="1px" fill=none>
+                      </defs>
+                    </g>
+                    <text text-anchor="middle" x=0 y=0>
+                      <textPath href="#compassMagneticText1" side=left startOffset="50%">magnetic</textPath>
+                    </text>
+                    <!--<text text-anchor="middle" x=0 y=-40>magnetic</text>
+                        <text text-anchor="middle" x=0 y=-25>(13 east)</text>-->
+                  </g>
+                </g>
+                <g id="boatSVGG" class="boat" transform="translate(0,0) rotate(0) scale(0.5)">
+                  <path class="boatHull" d="M0,-40 a75 75 0 0 1 10 100 m -10,-100 a 75 75 0 0 0 -10 100 a 30 30 0 0 0 20 0 Z" stroke="none" fill="blue" stroke-width="1 px"/>
+                  <!-- <path class="boatMastShadow" d="M0 0 l 45 45" stroke=black stroke-width="10px"/> -->
+                  <circle class="boatMast" r=5 cx=0 cy=0 stroke=none stroke-width="1 px" fill="white"/>
+                </g>
+              </g>
+              <!-- sun and sun shadow, like land, is not rotated like the compass and boat are, but separately !-->
+              <g id="sunLinesSVGG">
+              </g>
+              <!-- course, like land, is not rotated like the compass and boat are, but separately !-->
+              <g id="courseSVGG">
+              </g>
+              <!-- mark, like land, is not rotated like the compass and boat are, but separately !-->
+              <g id="markSVGG">
+              </g>
+            </svg>
+          </div>
+        </div>
+        <div id="expandedMark">
+          Mark: <select id="courseSelect">
+            <option value="">None - pick marks individually</option>
+            <option value="BayTour" selected>BayTour</option>
+            <option value="Course1p">Course1p</option>
+            <option value="Course1s">Course1s</option>
+            <option value="Course2p">Course2p</option>
+            <option value="Course2s">Course2s</option>
+            <option value="Course3p">Course3p</option>
+            <option value="Course3s">Course3s</option>
+          </select>
+          Mark: <select id="markSelect">
+            <option value="YRA_6">YRA_6</option>
+            <option value="YRA_16" selected>YRA_16</option>
+            <option value="YRA_17">YRA_17</option>
+            <option value="YRA_18">YRA_18</option>
+          </select>
+        </div>
+        <button id="saveCurrentLocation">Save Location</button>
+        <div id="collapsedCourseTable" class="hidden">
+          <button id="expandCourseTable">+ CourseTable</button>
+        </div>
+        <div id="expandedCourseTable">
+          <button id="collapseCourseTable">- CourseTable</button>
+          <div id="courseTableDiv" class="overflowxscroll">
+          </div>
+        </div>
+        <p>Local clock:<span id="clock"></span></p>
+        <p>Sun: azimuth <span id="sunAzimuth"></span>°, elevation <span id="sunElevation">°</p>
+        <p>Magvar: <span id="magvar"></span>°</p>
+        <table id="observer">
+          <thead>
+            <tr><th>name</th><th>description</th><th>value</th></tr>
+          </thead>
+          <tbody id="observerTable">
+            <tr><td><span id="observerName">Observer</span></td><td><span id="observerError"></span></td><td><span id="observerLatitude">observerLatitude</span> <span id="observerLongitude">observerLongitude</span></td></tr>
+            <tr><td>Speed</td><td></td><td><span id="providedSpeed"></span></td></tr>
+            <tr><td>Heading</td><td></td><td><span id="providedHeading"></span></td></tr>
+            <tr><td><span id="markName">markName</span></td><td><span id="markDescription">markDescription</td><td><span id="markLatitude">markLatitude</span> <span id="markLongitude">markLongitude</span></td></tr>
+          </tbody>
+        </table>
+        <div id="markFromObserverTable">
+          <table>
+            <tr><td>Distance</td><td><span id="distance">?</span></td></tr>
+            <tr><td>Bearing</td><td><span id="azimuthForward">?</span></td></tr>
+            <tr><td>Bearing vs track</td><td><span id="azimuthForwardRelativeToHeading">?</span></td></tr>
+            <tr><td>Bearing vs sun</td><td><span id="azimuthForwardRelativeToSunDegrees">?</span></td></tr>
+            <tr><td>Bearing vs shadow</td><td><span id="azimuthForwardRelativeToShadowDegrees">?</span></td></tr>
+          </table>
+        </div>
+        <button id="download">Download</button>
+        <div id="collapsedCredits">
+          <button id="expandCredits">+ Credits</button>
+        </div>
+        <div id="expandedCredits" class="hidden">
+          <button id="collapseCredits">- Credits</button>
+          <p>The author would like to thank the teams behind these open source projects, which this depends on:
+            <ul>
+              <li><a href="http://github.com/d3">D3.js</a>, copyright Mike Bostock, released under a permissive license</li>
+              <li><a href="http://github.com/antlr/antlr4">Antlr4</a>, copyright The ANTLR Project, released under the three-clause BSD license</li>
+            </ul>
+          </p>
+          <p>Additional thanks go to
+            <ul>
+              <li>NOAA, for releasing ENC charts</li>
+              <li>The OSGeo Foundation, for making great open-source GIS tools</li>
+              <li>Norbert Kiesel, for publishing the <a href="http://github.com/nkiesel/YRA-Marks">YRA-Marks</a></li>
+            </ul>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <p>Copyright 2021, R. A. Reitmeyer. All rights reserved. <span id="compileInfo"></span></p>
+    </div>
+  </body>
+  <script type="module" src="dist/main.js"></script>
+  <script type="text/javascript">
+    function ticksPathD(ticks, cx, cy, r, tickLen) {
+        retval = ""
+        for (i in ticks) {
+            let theta = ticks[i]
+            let sx = cx-r*Math.sin(theta*Math.PI/180)
+            let sy = cy+r*Math.cos(theta*Math.PI/180)
+            let ex = cx-(r-tickLen)*Math.sin(theta*Math.PI/180)
+            let ey = cy+(r-tickLen)*Math.cos(theta*Math.PI/180)
+            retval += `M${Math.round(sx)},${Math.round(sy)}L${Math.round(ex)},${Math.round(ey)} `
+        }
+        return retval
+    }
+    function drawCompassCard() {
+        let cx = 0
+        let cy = 0
+        let r = 100
+        let majorTicks = [0, 90, 180, 270]
+        let majorTicksPathD = ticksPathD(majorTicks, 0, 0, 100, 25)
+        let minorTicksPathD = ticksPathD([10, 20, 30, 40, 50, 60, 70, 80, 100, 110, 120, 130, 140, 150, 160, 170, 190, 200, 210, 220, 230, 240, 250, 260, 280, 290, 300, 310, 320, 330, 340, 350], 0, 0, 100, 10)
+        let magneticMajorTicksPathD = ticksPathD(majorTicks, 0, 0, 70, 25)
+        let magneticMinorTicksPathD = ticksPathD([10, 20, 30, 40, 50, 60, 70, 80, 100, 110, 120, 130, 140, 150, 160, 170, 190, 200, 210, 220, 230, 240, 250, 260, 280, 290, 300, 310, 320, 330, 340, 350], 0, 0, 70, 10)
+        console.log(majorTicksPathD)
+        console.log(minorTicksPathD)
+        console.log(magneticMajorTicksPathD)
+        console.log(magneticMinorTicksPathD)
+        let compassSVGG = document.getElementById("compassSVGG")
+        let compassMajorTicks = document.createElement("path")
+        compassMajorTicks.setAttribute("class", "compassMajorTicks")
+        compassMajorTicks.setAttribute("d", majorTicksPathD)
+        compassMajorTicks.setAttribute("stroke", "black")
+        compassMajorTicks.setAttribute("stroke-width", "1px")
+        compassSVGG.appendChild(compassMajorTicks)
+    }
+  </script>
+</html>
