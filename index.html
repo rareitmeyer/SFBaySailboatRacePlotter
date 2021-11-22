@@ -4,6 +4,11 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width,initial-scale=1" />
     <link rel="shortcut icon" href="static/favicon.ico" />
+    <style>
+      .hidden {
+          display: None;
+      }
+    </style>
     <title>SF Bay Sailboat Race Plotter</title>
   </head>
   <body>
@@ -281,6 +286,8 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
                     <option value="oyster point">oyster point</option>
                     <option value="half moon bay">half moon bay</option>
                     <option value="sequoia">sequoia</option>
+                    <option value="midpen">midpen trails</option>
+                    <option value="sjc">san jose</option>
                   </select>
               </td></tr>
             </table>
@@ -522,7 +529,7 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
           </div>
         </div>
         <div id="expandedMark">
-          Mark: <select id="courseSelect">
+          Course: <select id="courseSelect">
             <option value="">None - pick marks individually</option>
             <option value="BayTour" selected>BayTour</option>
             <option value="Course1p">Course1p</option>
@@ -532,7 +539,7 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
             <option value="Course3p">Course3p</option>
             <option value="Course3s">Course3s</option>
           </select>
-          Mark: <select id="markSelect">
+          Leg / Mark: <select id="markSelect">
             <option value="YRA_6">YRA_6</option>
             <option value="YRA_16" selected>YRA_16</option>
             <option value="YRA_17">YRA_17</option>
