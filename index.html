@@ -78,7 +78,7 @@
             <ul>
               <li>Explicit latitude, longitude as unsigned degrees using N, S, E, or W for hemispheres: <span class="example">Alcatraz = 37.808463 N, 122.455796 W</span></li>
               <li>Explicit longitude, latitude as unsigned degrees using N, S, E, or W for hemispheres: <span class="example">Alcatraz = 122.455796 W, 37.808463 N</span></li>
-              <li>Implicit latitude, Longitude as signed degrees using - for west longitudes and south latitudes: <span class="example">Alcatraz = 37.808463, -122.455796</span></li>
+              <li>Implicit latitude, longitude as signed degrees using - for west longitudes and south latitudes: <span class="example">Alcatraz = 37.808463, -122.455796</span></li>
             </ul>
             <p>Angles can be in explicit degrees, or degrees and minutes, or degrees, minutes and seconds by using ° ' "</p>
             <ul>
@@ -232,9 +232,9 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
           <table>
             <tr><td>Mode</td><td>
                 <select id="simulationOrGPS">
-                  <option value="simulation_20x">simulation (20x)</option>
-                  <option value="simulation_1x">simulation (1x)</option>
-                  <option value="gps" selected>gps</option>
+                  <option value="simulation_20x">BayTour simulation, 20x</option>
+                  <option value="simulation_1x">BayTour simulation, 1x</option>
+                  <option value="gps">gps</option>
                   <option value="stop" selected>stop</option>
                 </select>
             </td></tr>
@@ -470,6 +470,9 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
           <button id="collapseChart">- Chart</button>
           <button id="zoomIn">+</button>
           <button id="zoomOut">-</button>
+          <button id="centerBoat">B</button>
+          <button id="toggleFollowBoat">F</button>
+          <button id="centerCourse">C</button>
           <div id="chartDiv">
             <svg id="chartSvg" class="chart" width=500 height=500>
               <defs>
@@ -540,7 +543,7 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
         </div>
         <div id="expandedMark">
           Course: <select id="courseSelect">
-            <option value="">None - pick marks individually</option>
+            <option value="">None</option>
             <option value="BayTour" selected>BayTour</option>
             <option value="Course1p">Course1p</option>
             <option value="Course1s">Course1s</option>
@@ -565,7 +568,6 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
           <div id="courseTableDiv" class="overflowxscroll">
           </div>
         </div>
-        <p>Local clock:<span id="clock"></span></p>
         <p>Sun: azimuth <span id="sunAzimuth"></span>°, elevation <span id="sunElevation">°</p>
         <p>Magvar: <span id="magvar"></span>°</p>
         <table id="observer">
