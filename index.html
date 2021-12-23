@@ -436,6 +436,21 @@ Course2p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.G[gate] -> TI.W[p] -> TI.W
 Course2s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Twice around windward/leeward to starboard
 Course3p = TI.RC[start] -> TI.W[p] -> TI.Wop[p] -> TI.Jp[p] -> TI.G[gate] -> TI.W[p] -> TI.Wop[p] -> TI.RC[finish] ! Olympic to port
 Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.W[s] -> TI.Wos[s] -> TI.RC[finish] ! Olympic to starboard
+
+Foo0 = 37.5 N, 122.1 W
+Foo1 = Foo0 & 2 nmi @ 0 T
+Foo2 = Foo1 & 1 nmi @ 90 T
+Foo3 = Foo2 & 0.5 nmi @ 180 T
+Foo4 = Foo3 & 0.25 nmi @ 181 T   ! slightly West of Foo3
+
+CourseFoo1 = Foo0[start] -> Foo1[finish]
+CourseFoo2s = Foo0[start] -> Foo1[s] -> Foo2[finish]
+CourseFoo3s = Foo0[start] -> Foo1[s] -> Foo2[s] -> Foo3[finish]
+CourseFoo4s = Foo0[start] -> Foo1[s] -> Foo2[s] -> Foo3[s] -> Foo4[finish]
+CourseFoo2p = Foo2[start] -> Foo1[p] -> Foo0[finish]
+CourseFoo3p = Foo3[start] -> Foo2[p] -> Foo1[p] -> Foo0[finish]
+CourseFoo4p = Foo4[start] -> Foo3[p] -> Foo2[p] -> Foo1[p] -> Foo0[finish]
+
             </textarea>
           </div>
           <button id="calculateMarkPositions">(TODO) Calculate Mark Positions</button>
@@ -595,6 +610,14 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
           </table>
         </div>
         <button id="download">Download</button>
+        <div id="collapsedAstroChart" class="hidden">
+          <button id="expandAstroChart">+ AstroChart</button>
+        </div>
+        <div id="expandedAstroChart">
+          <button id="collapseAstroChart">- AstroChart</button>
+	  <div id="astroChartDiv">
+	  </div>
+        </div>
         <div id="collapsedCredits">
           <button id="expandCredits">+ Credits</button>
         </div>
@@ -611,6 +634,7 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
               <li>NOAA, for releasing ENC charts</li>
               <li>The OSGeo Foundation, for making great open-source GIS tools</li>
               <li>Norbert Kiesel, for publishing the <a href="http://github.com/nkiesel/YRA-Marks">YRA-Marks</a></li>
+	      <li>ESA for the Hipparcos star catalog</li>
             </ul>
         </div>
       </div>
