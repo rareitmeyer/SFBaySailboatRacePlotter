@@ -69,11 +69,22 @@
 
             <p>Last but not least, this app runs a simplified view of the land around the bay so you can look for the mark by looking for something behind it in the app, and then finding that landmark in the real world.</p>
 
+	    <p>Controls for the chart:
+	      <ul>
+		<li>+: Zoom in</li>
+		<li>-: Zoom out</li>
+		<li>B: Center on boat</li>
+		<li>F: Toggle follow boat on/off</li>
+		<li>C: Center on selected course (turns follow boat off)</li>
+		<li>M: Center on selected mark (turns follow boat off)</li>
+	      </ul>
+	      </p>
+
             <h1>Mark and Course Input</h1>
 
             <h2>Basics</h2>
             <p>Format is a Name followed by an equals sign and then a value, all on one line. Names shold start with a capital letter, followed by at least one more letter or number or underscore or (experimentally) period. Examples of good names are <span class="example">YRA_4</span>, <span class="example">RBBS_TI_1op</span>, and (experimentally) <span class="example">StF.A</span>. Examples of bad names include <span class="example">YRA-1</span>, <span class="example">1op</span>, <span class="example">A</span> and <span class="example">rbbs_a</span>.</p>
-            <p>Marks can be input in several formats</p>
+            <p>Marks can be defined in several formats</p>
             <p>The simplest way is a WGS84 latitude and longitude separated by a comma.</p>
             <ul>
               <li>Explicit latitude, longitude as unsigned degrees using N, S, E, or W for hemispheres: <span class="example">Alcatraz = 37.808463 N, 122.455796 W</span></li>
@@ -150,6 +161,11 @@
 
             <p>As a reminder on precision vs accuracy, a latitude expressed as degrees with four decimal places is precise to under 50 feet, and six decimal places is precise to under a foot. A typical GPS will be within 33 feet of the actual position half of the time, and more than 33 feet in error half of the time. A temporary buoy on a short 1:2 rode in 20 feet of water will move about 60 feet if the current reverses. Some clubs pre-set all their mark anchor gear to have 90' of rode to keep their lives simpler, which means almost 180 feet of movement as the current shifts. A government buoy in deeper water on longer rode will move much more than that. So when you look up that the Blossom Rock buoy was at 37.818376, -122.403448 when someone last measured it at some unknown point in the tide cycle, that doesn't mean you know where its position will be when you're going to round it to 6 decimal places / under a foot. This code uses 6 decimal places only so that if (heaven forbid) someone falls overboard and your only man overboard GPS is the "Save Location" button here, you have whatever precision is available even if it's not accurate.
             </p>
+
+	    <p>Expect the magnetic variation to be good to around 1/3 of a degree in the bay. Magnetic bearings use a simplified version of the USGW World Magnetic Model 2020-2025 at Alactraz. Temporal variation is accurate, but spatial variation is ignored for simplicity.
+	    </p>
+
+	    <p>The positions of the sun and star chart items should be accurate to within a degree, igoring refaction.<p>
 
             <h3>Putting It Together For Temporary Marks</h3>
 
@@ -488,6 +504,7 @@ CourseFoo4p = Foo4[start] -> Foo3[p] -> Foo2[p] -> Foo1[p] -> Foo0[finish]
           <button id="centerBoat">B</button>
           <button id="toggleFollowBoat">F</button>
           <button id="centerCourse">C</button>
+          <button id="centerMark">M</button>
           <div id="chartDiv">
             <svg id="chartSvg" class="chart" width=500 height=500>
               <defs>
@@ -611,11 +628,12 @@ CourseFoo4p = Foo4[start] -> Foo3[p] -> Foo2[p] -> Foo1[p] -> Foo0[finish]
         </div>
         <button id="download">Download</button>
         <div id="collapsedAstroChart" class="hidden">
-          <button id="expandAstroChart">+ AstroChart</button>
+          <button id="expandAstroChart">+ StarChart</button>
         </div>
         <div id="expandedAstroChart">
-          <button id="collapseAstroChart">- AstroChart</button>
+          <button id="collapseAstroChart">- StarChart</button>
 	  <div id="astroChartDiv">
+	    <p>The currently selected mark (if any) is at the bottom of the chart. To find your mark on a clear night, look around until your sky matches the bottom of the chart. This is experimental; it omits planets, the sun and the moon.</p>
 	  </div>
         </div>
         <div id="collapsedCredits">
