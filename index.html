@@ -257,10 +257,12 @@ Course3s = TI.RC[start] -> TI.W[s] -> TI.Wos[s] -> TI.Js[s] -> TI.G[gate] -> TI.
             <tr><td>Display</td><td>
                 <select id="up">
                   <option value="northTrue" selected>true north up</option>
+<!-- As of 2023-07-26 these do not play well with modes that do not keep the boat centered
                   <option value="northMagnetic">magnetic north up</option>
                   <option value="track">track up</option>
                   <option value="sun">sun up</option>
                   <option value="sunShadow">sun shadow up</option>
+		  -->
                 </select>
             </td></tr>
             <tr><td>Angles</td><td>
@@ -659,7 +661,7 @@ CourseFoo4p = Foo4[start] -> Foo3[p] -> Foo2[p] -> Foo1[p] -> Foo0[finish]
     </div>
 
     <div>
-      <p>Copyright 2021, R. A. Reitmeyer. All rights reserved. <span id="compileInfo"></span></p>
+      <p>Copyright 2021-2023, R. A. Reitmeyer. All rights reserved. <span id="compileInfo"></span></p>
     </div>
   </body>
   <script type="module" src="dist/main.js"></script>
